@@ -4,77 +4,17 @@ import java.util.*;
 
 public class Timetable {
 
-    private HashMap<DayOfWeek, TreeMap<TimeOfDay, ArrayList<TrainingSession>>> timetable = new HashMap<>();
-    private HashMap<Coach, Integer> coachHash = new HashMap<>();
-    private int countOfSessions = 0;
+    private /* как это хранить??? */ timetable;
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
-
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> timeTree = timetable.get(trainingSession.getDayOfWeek());
-        if (timeTree == null) {
-            timeTree = new TreeMap<>();
-            timetable.put(trainingSession.getDayOfWeek(), timeTree);
-        } else {
-            timetable.put(trainingSession.getDayOfWeek(), timeTree);
-        }
-
-        ArrayList<TrainingSession> trainingSessions = timeTree.get(trainingSession.getTimeOfDay());
-        if (trainingSessions == null) {
-            trainingSessions = new ArrayList<>();
-            timeTree.put(trainingSession.getTimeOfDay(), trainingSessions);
-        }
-        trainingSessions.add(trainingSession);
-
+        //сохраняем занятие в расписании
     }
 
-    public ArrayList<TrainingSession> getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
-
-        ArrayList<TrainingSession> trainingSessionsForDay = new ArrayList<>();
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> keyDay = timetable.get(dayOfWeek);
-        if (keyDay != null) {
-            Collection<ArrayList<TrainingSession>> trainingSessions = keyDay.values();
-            trainingSessions.forEach(trainingSessionsForDay::addAll);
-            return trainingSessionsForDay;
-        } else {
-            return null;
-        }
+    public /* непонятно, что возвращать */ getTrainingSessionsForDay(DayOfWeek dayOfWeek) {
+        //как реализовать, тоже непонятно, но сложность должна быть О(1)
     }
 
-    public ArrayList<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
-
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> keyDay = timetable.get(dayOfWeek);
-        if (keyDay != null) {
-            return keyDay.get(timeOfDay);
-        } else {
-            return null;
-        }
+    public /* непонятно, что возвращать */ getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
+        //как реализовать, тоже непонятно, но сложность должна быть О(1)
     }
-
-    public ArrayList<Integer> getCountByCoaches(Coach coach) {
-        for (DayOfWeek day : DayOfWeek.values()) {
-            TreeMap<TimeOfDay, ArrayList<TrainingSession>> key = timetable.get(day);
-
-            if (key == null) {
-                continue;
-            }
-
-            Collection<ArrayList<TrainingSession>> trainings = key.values();
-
-            for (ArrayList<TrainingSession> trainingSessions : trainings) {
-                for (int i = 0; i < trainingSessions.size(); i++) {
-                    if (trainingSessions.get(i).getCoach().equals(coach)) {
-                        countOfSessions++;
-                    }
-                }
-            }
-        }
-
-        coachHash.put(coach, countOfSessions);
-        countOfSessions = 0;
-        ArrayList<Integer> listWithSessions = new ArrayList<>(coachHash.values());
-        listWithSessions.sort(Collections.reverseOrder());
-
-        return listWithSessions;
-    }
-
 }
