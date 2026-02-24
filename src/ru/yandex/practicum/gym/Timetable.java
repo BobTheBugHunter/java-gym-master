@@ -1,6 +1,7 @@
 package ru.yandex.practicum.gym;
 
 import java.util.*;
+/*В первый раз торопился и случайно замержил без проверки, щас откатил до init*/
 
 public class Timetable {
 
