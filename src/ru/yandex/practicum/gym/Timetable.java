@@ -15,8 +15,6 @@ public class Timetable {
         if (timeTree == null) {
             timeTree = new TreeMap<>();
             timetable.put(trainingSession.getDayOfWeek(), timeTree);
-        } else {
-            timetable.put(trainingSession.getDayOfWeek(), timeTree);
         }
 
         ArrayList<TrainingSession> trainingSessions = timeTree.get(trainingSession.getTimeOfDay());
@@ -37,7 +35,7 @@ public class Timetable {
             trainingSessions.forEach(trainingSessionsForDay::addAll);
             return trainingSessionsForDay;
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -45,7 +43,8 @@ public class Timetable {
 
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> keyDay = timetable.get(dayOfWeek);
         if (keyDay != null) {
-            return keyDay.get(timeOfDay);
+            return new ArrayList<>(keyDay.getOrDefault(timeOfDay,
+                    (ArrayList<TrainingSession>) Collections.<TrainingSession>emptyList()));
         } else {
             return null;
         }
