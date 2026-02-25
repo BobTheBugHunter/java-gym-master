@@ -43,14 +43,17 @@ public class Timetable {
 
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> keyDay = timetable.get(dayOfWeek);
         if (keyDay != null) {
-            return new ArrayList<>(keyDay.getOrDefault(timeOfDay,
-                    (ArrayList<TrainingSession>) Collections.<TrainingSession>emptyList()));
-        } else {
-            return null;
-        }
+            ArrayList<TrainingSession> sessions = keyDay.get(timeOfDay);
+            if (sessions != null) {
+                return new ArrayList<>(sessions);
+            }
+    }
+        return  new ArrayList<>();
     }
 
-    public ArrayList<Integer> getCountByCoaches(Coach coach) {
+    public ArrayList<CoachStatistic> getCountByCoaches() {
+
+        Map<Coach, Integer> coachHash = new HashMap<>();
         for (DayOfWeek day : DayOfWeek.values()) {
             TreeMap<TimeOfDay, ArrayList<TrainingSession>> key = timetable.get(day);
 
@@ -58,23 +61,27 @@ public class Timetable {
                 continue;
             }
 
-            Collection<ArrayList<TrainingSession>> trainings = key.values();
-
-            for (ArrayList<TrainingSession> trainingSessions : trainings) {
-                for (int i = 0; i < trainingSessions.size(); i++) {
-                    if (trainingSessions.get(i).getCoach().equals(coach)) {
-                        countOfSessions++;
-                    }
+            for (ArrayList<TrainingSession> trainingSessions : key.values()) {
+                for (TrainingSession trainingSession : trainingSessions) {
+                    Coach coach = trainingSession.getCoach();
+                    coachHash.put(coach, coachHash.getOrDefault(coach, 0) + 1);
                 }
             }
         }
 
-        coachHash.put(coach, countOfSessions);
-        countOfSessions = 0;
-        ArrayList<Integer> listWithSessions = new ArrayList<>(coachHash.values());
-        listWithSessions.sort(Collections.reverseOrder());
+        ArrayList<CoachStatistic> coachStatistics = new ArrayList<>();
+        for (Map.Entry<Coach, Integer> entry : coachHash.entrySet()) {
+            coachStatistics.add(new CoachStatistic(entry.getKey(), entry.getValue()));
+        }
 
-        return listWithSessions;
+
+        Collections.sort(coachStatistics, new Comparator<CoachStatistic>() {
+            @Override
+            public int compare(CoachStatistic o1, CoachStatistic o2) {
+                return o2.getTrainingCount() - o1.getTrainingCount();
+            }
+        });
+        return coachStatistics;
     }
 
 }
